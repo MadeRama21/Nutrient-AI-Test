@@ -89,8 +89,6 @@
     </div>
 
     <script>
-        // PENTING: API_KEY dan API_URL dihapus dari sini demi keamanan.
-        // Logika pengiriman sekarang langsung ke endpoint internal /api/analyze
 
         const form = document.getElementById('nutrientForm');
         const loading = document.getElementById('loading');
@@ -130,8 +128,6 @@
                 }
 
                 // 5. Render Hasil
-                // Karena di api/analyze.js kita mengirim { text: response.text() },
-                // maka kita cukup mengambil result.text
                 if (result.text) {
                     apiResult.innerHTML = marked.parse(result.text);
                     resultContainer.classList.remove('hidden');
