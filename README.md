@@ -1,26 +1,26 @@
-# 🥗 Nutrient AI
+# Nutrient AI TEST
 
 An AI-Powered Self Nutrition Screening System using Google Gemini API.
 
 ![Nutrient AI](https://img.shields.io/badge/AI-Gemini%202.0-blue?style=for-the-badge)
 ![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=for-the-badge)
 
-## ✨ Features
+## Features
 
-- 📊 **Nutritional Status Analysis** - Calculate BMI based on weight and height
-- ⚠️ **NCD Risk Detection** - Analyze risk of Hypertension, Diabetes, and Gout
-- 🍽️ **Meal Recommendations** - 7-Day Weekly Meal Plan
-- 🤖 **AI-Powered** - Powered by Google Gemini 2.0 Flash
-- 📱 **Responsive** - Optimized for desktop and mobile
+- **Nutritional Status Analysis** - Calculate BMI based on weight and height
+- **NCD Risk Detection** - Analyze risk of Hypertension, Diabetes, and Gout
+- **Meal Recommendations** - 7-Day Weekly Meal Plan
+- **AI-Powered** - Powered by Google Gemini 2.0 Flash
+- **Responsive** - Optimized for desktop and mobile
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend:** HTML, TailwindCSS, JavaScript
 - **Backend:** Vercel Serverless Functions (Node.js)
 - **AI Model:** Google Gemini 2.0 Flash
 - **Markdown Parser:** Marked.js
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Nutrient AI/
@@ -34,7 +34,7 @@ Nutrient AI/
 └── README.md
 ```
 
-## 🚀 Deploy to Vercel
+## Deploy to Vercel
 
 ### 1. Push to GitHub
 ```bash
@@ -58,7 +58,7 @@ git push origin main
 ### 4. Deploy
 Vercel will automatically deploy on every push to the repository.
 
-## 🔧 Local Development
+## Local Development
 
 ### Prerequisites
 - Node.js 18+
@@ -80,7 +80,7 @@ echo "GEMINI_API_KEY=your_api_key_here" > .env
 npx vercel dev
 ```
 
-## 📝 How to Use
+## How to Use
 
 1. Fill the form with your health data:
    - Age
@@ -102,13 +102,13 @@ npx vercel dev
 
 5. Click **Save as PDF** to save the results
 
-## 🔐 Environment Variables
+## Environment Variables
 
 | Variable | Description |
 |----------|-------------|
 | `GEMINI_API_KEY` | API Key from Google AI Studio |
 
-## 📄 License
+## License
 
 MIT License © 2026
 
