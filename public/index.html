@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrient AI - Skrining Gizi Mandiri</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <div class="max-w-4xl mx-auto py-10 px-4">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-blue-600 mb-2">Nutrient AI</h1>
+            <p class="text-gray-600">Sistem Skrining Gizi Mandiri Berbasis Kecerdasan Buatan</p>
+        </header>
+
+        <div class="bg-white shadow-xl rounded-2xl p-8 mb-8 border border-gray-100">
+            <h2 class="text-xl font-bold mb-6 border-b pb-2 text-blue-500">Formulir Skrining Kesehatan</h2>
+
+            <form id="nutrientForm" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Usia (Tahun)</label>
+                        <input type="number" id="usia"
+                            class="w-full border p-2 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                            placeholder="Contoh: 25" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Berat Badan (kg)</label>
+                        <input type="number" id="bb"
+                            class="w-full border p-2 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                            placeholder="Contoh: 70" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Tinggi Badan (cm)</label>
+                        <input type="number" id="tb"
+                            class="w-full border p-2 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                            placeholder="Contoh: 170" required>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Konsumsi Gula (Minuman Manis)</label>
+                        <select id="gula" class="w-full border p-2 rounded-lg outline-none">
+                            <option value="Jarang">Jarang</option>
+                            <option value="1-2 kali sehari">1-2 kali sehari</option>
+                            <option value="Lebih dari 3 kali sehari">Lebih dari 3 kali sehari</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Konsumsi Garam (Camilan Asin)</label>
+                        <select id="garam" class="w-full border p-2 rounded-lg outline-none">
+                            <option value="Hampir tidak pernah">Hampir tidak pernah</option>
+                            <option value="Sering">Sering</option>
+                            <option value="Setiap kali makan">Setiap kali makan</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-red-500">Keluhan Fisik (Opsional)</label>
+                    <textarea id="keluhan" rows="3"
+                        class="w-full border p-2 rounded-lg focus:ring-2 focus:ring-red-300 outline-none"
+                        placeholder="Contoh: Sering pusing di tengkuk, sering merasa haus di malam hari..."></textarea>
+                </div>
+
+                <button type="submit" id="btnAnalyze"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg transform active:scale-95">
+                    Mulai Analisis AI
+                </button>
+            </form>
+        </div>
+
+        <div id="loading" class="hidden text-center py-10">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p class="text-blue-600 font-medium">AI sedang menganalisis data Anda...</p>
+        </div>
+
+        <div id="resultContainer" class="hidden bg-blue-50 border-2 border-blue-200 shadow-lg rounded-2xl p-8">
+            <h2 class="text-2xl font-bold mb-4 text-blue-700">Hasil Analisis Nutrient AI</h2>
+            <div id="apiResult" class="prose max-w-none text-gray-700">
+            </div>
+            <button onclick="window.print()" class="mt-6 text-sm text-blue-500 underline">Simpan sebagai PDF</button>
+        </div>
+    </div>
+
+    <script>
+        // PENTING: API_KEY dan API_URL dihapus dari sini demi keamanan.
+        // Logika pengiriman sekarang langsung ke endpoint internal /api/analyze
+
+        const form = document.getElementById('nutrientForm');
+        const loading = document.getElementById('loading');
+        const resultContainer = document.getElementById('resultContainer');
+        const apiResult = document.getElementById('apiResult');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // 1. Ambil data dari form
+            const data = {
+                usia: document.getElementById('usia').value,
+                bb: document.getElementById('bb').value,
+                tb: document.getElementById('tb').value,
+                gula: document.getElementById('gula').value,
+                garam: document.getElementById('garam').value,
+                keluhan: document.getElementById('keluhan').value || "Tidak ada keluhan"
+            };
+
+            // 2. Tampilan UI (Loading ON, Result OFF)
+            loading.classList.remove('hidden');
+            resultContainer.classList.add('hidden');
+
+            try {
+                // 3. Kirim data ke Backend (Vercel Serverless Function)
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                // 4. Error Handling: Cek apakah ada error dari server/backend
+                if (!response.ok || result.error) {
+                    throw new Error(result.error || "Gagal mendapatkan respons dari server.");
+                }
+
+                // 5. Render Hasil
+                // Karena di api/analyze.js kita mengirim { text: response.text() },
+                // maka kita cukup mengambil result.text
+                if (result.text) {
+                    apiResult.innerHTML = marked.parse(result.text);
+                    resultContainer.classList.remove('hidden');
+                } else {
+                    throw new Error("Format respons tidak sesuai.");
+                }
+
+            } catch (error) {
+                console.error("Detail Error:", error);
+                alert("Terjadi Kesalahan: " + error.message);
+            } finally {
+                // 6. Loading OFF
+                loading.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>
